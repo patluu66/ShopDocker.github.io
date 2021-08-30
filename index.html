@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <title>BASH</title>
+  <base href="https://patluu66.github.io/ShopDocker.github.io/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <app-root></app-root>
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD" data-sdk-integration-source="button-factory"></script>
+  <script
+    src="https://www.paypal.com/sdk/js?client-id=AQ8kxKqilZhpqPLITVFYX2IbIGS7B4SW9cWTbhzZH8KY0QsWQ75X36BF2XDb1VY_UzyzfJshSCmowAtg"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
+  </script>
+<!-- 
+<script>
+  const allowedCardNetworks = ["AMEX", "DISCOVER", "INTERAC", "JCB", "MASTERCARD", "VISA"];
+  const allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
+  if (window.PaymentRequest) {
+    const request = createPaymentRequest();
+  
+    request.canMakePayment()
+        .then(function(result) {
+          if (result) {
+            // Display PaymentRequest dialog on interaction with the existing checkout button
+            document.getElementById('buyButton')
+                .addEventListener('click', onBuyClicked);
+          }
+        })
+        .catch(function(err) {
+          showErrorForDebugging(
+              'canMakePayment() error! ' + err.name + ' error: ' + err.message);
+        });
+  } else {
+    showErrorForDebugging('PaymentRequest API not available.');
+  }
+  
+  /**
+   * Show a PaymentRequest dialog after a user clicks the checkout button
+   */
+  function onBuyClicked() {
+    createPaymentRequest()
+        .show()
+        .then(function(response) {
+          // Dismiss payment dialog.
+          response.complete('success');
+          handlePaymentResponse(response);
+        })
+        .catch(function(err) {
+          showErrorForDebugging(
+              'show() error! ' + err.name + ' error: ' + err.message);
+        });
+  }
+  
+  /**
+   * Define your unique Google Pay API configuration
+   *
+   * @returns {object} data attribute suitable for PaymentMethodData
+   */
+  function getGooglePaymentsConfiguration() {
+    return {
+      environment: 'TEST',
+      apiVersion: 2,
+      apiVersionMinor: 0,
+      merchantInfo: {
+        // A merchant ID is available after approval by Google.
+        // 'merchantId':'12345678901234567890',
+        merchantName: 'Example Merchant'
+      },
+      allowedPaymentMethods: [{
+        type: 'CARD',
+        parameters: {
+          allowedAuthMethods: allowedCardAuthMethods,
+          allowedCardNetworks: allowedCardNetworks
+        },
+        tokenizationSpecification: {
+          type: 'PAYMENT_GATEWAY',
+          // Check with your payment gateway on the parameters to pass.
+          // @see {@link https://developers.google.com/pay/api/web/reference/request-objects#gateway}
+          parameters: {
+            'gateway': 'example',
+            'gatewayMerchantId': 'exampleGatewayMerchantId'
+          }
+        }
+      }]
+    };
+  }
+  
+  /**
+   * Create a PaymentRequest
+   *
+   * @returns {PaymentRequest}
+   */
+  function createPaymentRequest() {
+    // Add support for the Google Pay API.
+    const methodData = [{
+      supportedMethods: 'https://google.com/pay',
+      data: getGooglePaymentsConfiguration()
+    }];
+    // Add other supported payment methods.
+    methodData.push({
+      supportedMethods: 'basic-card',
+      data: {
+        supportedNetworks:
+            Array.from(allowedCardNetworks, (network) => network.toLowerCase())
+      }
+    });
+  
+    const details = {
+      total: {label: 'Test Purchase', amount: {currency: 'USD', value: '1.00'}}
+    };
+  
+    const options = {
+      requestPayerEmail: true,
+      requestPayerName: true
+    };
+  
+    return new PaymentRequest(methodData, details, options);
+  }
+  
+  /**
+   * Process a PaymentResponse
+   *
+   * @param {PaymentResponse} response returned when a user approves the payment request
+   */
+  function handlePaymentResponse(response) {
+    const formattedResponse = document.createElement('pre');
+    formattedResponse.appendChild(
+        document.createTextNode(JSON.stringify(response.toJSON(), null, 2)));
+    document.getElementById('checkout')
+        .insertAdjacentElement('afterend', formattedResponse);
+  }
+  
+  /**
+   * Display an error message for debugging
+   *
+   * @param {string} text message to display
+   */
+  function showErrorForDebugging(text) {
+    const errorDisplay = document.createElement('code');
+    errorDisplay.style.color = 'red';
+    errorDisplay.appendChild(document.createTextNode(text));
+    const p = document.createElement('p');
+    p.appendChild(errorDisplay);
+    document.getElementById('checkout').insertAdjacentElement('afterend', p);
+  }
+  </script> -->
+
+<script src="runtime.js"></script><script src="polyfills-es5.js" nomodule></script><script src="polyfills.js"></script><script src="styles.js"></script><script src="vendor.js"></script><script src="main.js"></script></body>
+</html>
